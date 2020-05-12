@@ -1,19 +1,28 @@
 import sys
+import csv
+import os
 
-clients = [
-    {
-        'name': 'Pablo',
-        'company': 'Google',
-        'email': 'pablo@google.com',
-        'position': 'Software Engineer',
-    },
-    {
-        'name': 'Ricardo',
-        'company': 'Facebook',
-        'email': 'ricardo@facebook.com',
-        'position': 'Data Engineer',
-    }
-]
+CLIENT_TABLE = '.clients.csv' #Our hidden csv file
+CLIENT_SCHEMA = ['name', 'company', 'email', 'position'] #list of name "columns".
+clients = []
+
+
+def _initialize_client_from_storage():
+    with open(CLIENT_TABLE, mode = 'r') as f:
+        reader = csv.DictReader(f, fieldnames = CLIENT_SCHEMA) #fieldnames contains the keys to access the values. The name of the "column"
+
+        for row in reader:
+            clients.append(row)
+
+
+def _save_clients_to_storage():
+    tmp_table_name = '{}.tmp'.format(CLIENT_TABLE) #Creates a temportal file to manupulate writing to not affect original final until writing is done.
+    with open(tmp_table_name, mode = 'w') as f: 
+        writer = csv.DictWriter(f, fieldnames = CLIENT_SCHEMA)
+        writer.writerows(clients) #Writes all  the rows at once
+
+        os.remove(CLIENT_TABLE) #Using os module to modify an extern file
+        os.rename(tmp_table_name, CLIENT_TABLE)
 
 
 def create_client(client):
@@ -42,7 +51,7 @@ def update_client(client_name, updated_client):
     for idx, client in enumerate(clients):
         if client['name'] == client_name:
             clients[idx] = updated_client
-            list_clients()    
+            print(clients[idx])   
 
 
 def delete_client(client_name): #Returns found to validate in main execution if the clients exists in list
@@ -51,8 +60,8 @@ def delete_client(client_name): #Returns found to validate in main execution if 
 
     for idx, client in enumerate(clients):
         if client['name'] == client_name:
-            clients.pop(idx)
-            list_clients() 
+            clients.pop(idx)  
+            print(f'The client {client_name} has been deleted.')          
             found = True
         else:
             found = False
@@ -128,6 +137,8 @@ def _get_client_field(field_name):
 
 if __name__ == "__main__":
 
+    _initialize_client_from_storage()
+       
     _print_welcome()
 
     command = input()
@@ -136,7 +147,6 @@ if __name__ == "__main__":
     if command == 'C':
         client = _get_client_from_user()
         create_client(client)
-        list_clients()
     elif command == 'R':
         list_clients()
     elif command == 'U':
@@ -159,3 +169,5 @@ if __name__ == "__main__":
         
     else:
         print('Invalid command')
+
+    _save_clients_to_storage()
