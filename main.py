@@ -1,4 +1,4 @@
-import sys
+# import sys
 import csv
 import os
 
@@ -16,7 +16,7 @@ def _initialize_client_from_storage():
 
 
 def _save_clients_to_storage():
-    tmp_table_name = '{}.tmp'.format(CLIENT_TABLE) #Creates a temportal file to manupulate writing to not affect original final until writing is done.
+    tmp_table_name = '{}.tmp'.format(CLIENT_TABLE) #Creates a temporal file to manupulate writing to not affect original final until writing is done.
     with open(tmp_table_name, mode = 'w') as f: 
         writer = csv.DictWriter(f, fieldnames = CLIENT_SCHEMA)
         writer.writerows(clients) #Writes all  the rows at once
