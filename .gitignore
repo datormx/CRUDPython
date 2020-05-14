@@ -2,3 +2,4 @@ platzi-ventas/env
 env/
 *.egg-info
 __pycache__
+.clients.csv
