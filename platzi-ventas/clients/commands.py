@@ -10,11 +10,12 @@ def clients():
 @click.pass_context
 def create(ctx, name, company, email, position):
     """Creates a New Client"""
+    pass
 
 
 @clients.command()
 @click.pass_context
-def list(ctx):
+def lists(ctx):
     """List all clients"""
     pass
 
